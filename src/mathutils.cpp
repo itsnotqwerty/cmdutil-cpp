@@ -82,16 +82,16 @@ void mathutil_help(const std::string& input) {
 
 void mathutil(const std::string& input) {
     std::vector<MathModuleType<boost::multiprecision::cpp_int>> bigNumberOperations = {
-        {"fibonacci", 1, fibonacci},
-        {"factorial", 1, factorial},
-        {"prime", 1, prime}
+        {"fibonacci", SINGLE_ARG, fibonacci},
+        {"factorial", SINGLE_ARG, factorial},
+        {"prime", SINGLE_ARG, prime}
     };
 
     std::vector<MathModuleType<std::vector<int>>> intArrayOperations = {
-        {"factorize", 1, factor}
+        {"factorize", SINGLE_ARG, factor}
     };
 
-    ModuleType defaultOperation = {"help", 0, mathutil_help};
+    ModuleType defaultOperation = {"help", MODULE, mathutil_help};
 
     std::vector<int> opCodes = {
         registerModule<boost::multiprecision::cpp_int, int>(bigNumberOperations, input),

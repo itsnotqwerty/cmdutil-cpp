@@ -12,9 +12,9 @@ void help(const std::string& input) {
 
 int main(int argc, char* argv[]) {
     std::vector<ModuleType> commands = {
-        {"roll", 1, rollDice},
-        {"mathutil", 0, mathutil},
-        {"help", 0, help}
+        {"roll", SINGLE_ARG, rollDice},
+        {"mathutil", MODULE, mathutil},
+        {"help", MODULE, help}
     };
 
     ModuleType defaultCommand = {"help", 0, help};

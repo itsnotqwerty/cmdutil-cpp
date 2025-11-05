@@ -4,6 +4,8 @@
 #include "commands.hpp"
 #include "parsing.hpp"
 
+enum paramTypes {MODULE, SINGLE_ARG, DOUBLE_ARG};
+
 typedef Command<void(*)(const std::string&)> ModuleType;
 
 template<typename T>
