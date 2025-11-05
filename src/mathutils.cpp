@@ -79,7 +79,7 @@ void mathutil(const std::string& input) {
 
     for (const auto& op : operations) {
         if (input.find(op.name) == 0) {
-            if (op.requiredArgs == 0) {
+            if (op.name == "help") {
                 op.hook(0);
                 return;
             }
