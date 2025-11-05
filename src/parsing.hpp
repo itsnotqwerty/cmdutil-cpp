@@ -9,6 +9,16 @@
 #include <typeinfo>
 
 template<class T>
+struct TypeIsBigNumVector {
+    static const bool value = false;
+};
+
+template<>
+struct TypeIsBigNumVector<std::vector<boost::multiprecision::cpp_int>> {
+    static const bool value = true;
+};
+
+template<class T>
 struct TypeIsIntVector {
     static const bool value = false;
 };
@@ -18,23 +28,38 @@ struct TypeIsIntVector<std::vector<int>> {
     static const bool value = true;
 };
 
+template<typename T>
+void parseSingleValue(T value) {
+    std::cout << value << "\n";
+    return;
+}
+
+template<typename T>
+void parseMultipleValues(std::vector<T> values) {
+    std::cout << "[";
+    for (size_t i = 0; i < values.size(); ++i) {
+        std::cout << values[i];
+        if (i < values.size() - 1) {
+            std::cout << ", ";
+        }
+    }
+    std::cout << "]\n";
+    return;
+}
+
 template<typename T, typename K>
 void parseCommand(K number, T result, const Command<T(*)(K)>& op) {
     std::string opName = op.name;
     opName[0] = toupper(opName[0]);
     printf("%s(%d) = ", opName.c_str(), number);
     if constexpr (std::is_same<T, boost::multiprecision::cpp_int>::value) {
-        std::cout << result << "\n";
+        parseSingleValue<boost::multiprecision::cpp_int>(result);
+        return;
+    } else if constexpr (TypeIsBigNumVector<T>::value) {
+        parseMultipleValues<boost::multiprecision::cpp_int>(result);
         return;
     } else if constexpr (TypeIsIntVector<T>::value) {
-        std::cout << "[";
-        for (size_t i = 0; i < result.size(); ++i) {
-            std::cout << result[i];
-            if (i < result.size() - 1) {
-                std::cout << ", ";
-            }
-        }
-        std::cout << "]\n";
+        parseMultipleValues<int>(result);
         return;
     }
     return;

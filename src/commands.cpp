@@ -36,6 +36,12 @@ template int handleCommands<boost::multiprecision::cpp_int, int>(
     const std::function<void(int, boost::multiprecision::cpp_int, Command<boost::multiprecision::cpp_int(*)(int)>)>& parse
 );
 
+template int handleCommands<std::vector<boost::multiprecision::cpp_int>, int>(
+    const std::string& input,
+    const std::vector<Command<std::vector<boost::multiprecision::cpp_int>(*)(int)>>& commands,
+    const std::function<void(int, std::vector<boost::multiprecision::cpp_int>, Command<std::vector<boost::multiprecision::cpp_int>(*)(int)>)>& parse
+);
+
 template int handleCommands<std::vector<int>, int>(
     const std::string& input,
     const std::vector<Command<std::vector<int>(*)(int)>>& commands,

@@ -70,13 +70,13 @@ std::vector<int> factorize(int n) {
     return factors;
 }
 
-int choose(int k, int n) {
-    int n_choose_k = (factorial(n) / (factorial(k) * factorial(n-k))).convert_to<int>();
+boost::multiprecision::cpp_int choose(int k, int n) {
+    boost::multiprecision::cpp_int n_choose_k = factorial(n) / (factorial(k) * factorial(n-k));
     return n_choose_k;
 }
 
-std::vector<int> pascal(int n) {
-    std::vector<int> bces;
+std::vector<boost::multiprecision::cpp_int> pascal(int n) {
+    std::vector<boost::multiprecision::cpp_int> bces;
     for (int i = 0; i <= n; i++) {
         bces.push_back(choose(i, n));
     }
@@ -101,15 +101,20 @@ void mathutil(const std::string& input) {
         {"prime", SINGLE_ARG, prime}
     };
 
-    std::vector<MathModuleType<std::vector<int>>> intArrayOperations = {
-        {"factorize", SINGLE_ARG, factorize},
+    std::vector<MathModuleType<std::vector<boost::multiprecision::cpp_int>>> bigNumberArrayOperations = {
         {"pascal", SINGLE_ARG, pascal}
     };
+
+    std::vector<MathModuleType<std::vector<int>>> intArrayOperations = {
+        {"factorize", SINGLE_ARG, factorize}
+    };
+
 
     ModuleType defaultOperation = {"help", MODULE, mathutil_help};
 
     std::vector<int> opCodes = {
         registerModule<boost::multiprecision::cpp_int, int>(bigNumberOperations, input),
+        registerModule<std::vector<boost::multiprecision::cpp_int>, int>(bigNumberArrayOperations, input),
         registerModule<std::vector<int>, int>(intArrayOperations, input)
     };
 
