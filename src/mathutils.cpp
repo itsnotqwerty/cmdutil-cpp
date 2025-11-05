@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include "commands.hpp"
+#include "modules.hpp"
 #include "parsing.hpp"
 
 std::vector<boost::multiprecision::cpp_int> fib_cache = {0, 1};
@@ -84,17 +85,17 @@ boost::multiprecision::cpp_int help(int n) {
 }
 
 void mathutil(const std::string& input) {
-    std::vector<Command<boost::multiprecision::cpp_int(*)(int)>> bigNumberOperations = {
+    std::vector<MathModuleType<boost::multiprecision::cpp_int>> bigNumberOperations = {
         {"fibonacci", 1, fibonacci},
         {"factorial", 1, factorial},
         {"prime", 1, prime}
     };
 
-    std::vector<Command<std::vector<int>(*)(int)>> intArrayOperations = {
+    std::vector<MathModuleType<std::vector<int>>> intArrayOperations = {
         {"factorize", 1, factor}
     };
 
-    Command<boost::multiprecision::cpp_int(*)(int)> defaultOperation = {"help", 0, help};
+    MathModuleType<boost::multiprecision::cpp_int> defaultOperation = {"help", 0, help};
 
     if (
         handleCommands<boost::multiprecision::cpp_int, int>(input, bigNumberOperations, parseCommand<boost::multiprecision::cpp_int, int>) == 0 ||

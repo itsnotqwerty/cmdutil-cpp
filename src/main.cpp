@@ -5,6 +5,7 @@
 #include "dice.hpp"
 #include "mathutils.hpp"
 #include "commands.hpp"
+#include "modules.hpp"
 
 void help(const std::string& input) {
     std::cout << "Available commands:\n";
@@ -14,13 +15,13 @@ void help(const std::string& input) {
 }
 
 int main(int argc, char* argv[]) {
-    std::vector<Command<void(*)(const std::string&)>> commands = {
+    std::vector<ModuleType> commands = {
         {"roll", 1, rollDice},
         {"mathutil", 0, mathutil},
         {"help", 0, help}
     };
 
-    Command<void(*)(const std::string&)> defaultCommand = {"help", 0, help};
+    ModuleType defaultCommand = {"help", 0, help};
 
     if (argc > 1) {
         std::string command = argv[1];
