@@ -55,7 +55,7 @@ boost::multiprecision::cpp_int prime(int n) {
     throw std::runtime_error("Unreachable");
 }
 
-std::vector<int> factor(int n) {
+std::vector<int> factorize(int n) {
     if (n <= 0) throw std::invalid_argument("Input must be positive for factorization");
     std::vector<int> factors;
     for (int i = 2; i * i <= n; ++i) {
@@ -88,7 +88,7 @@ void mathutil(const std::string& input) {
     };
 
     std::vector<MathModuleType<std::vector<int>>> intArrayOperations = {
-        {"factorize", SINGLE_ARG, factor}
+        {"factorize", SINGLE_ARG, factorize}
     };
 
     ModuleType defaultOperation = {"help", MODULE, mathutil_help};
