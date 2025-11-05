@@ -119,7 +119,9 @@ void mathutil(const std::string& input) {
     ) {
         return;
     } else {
-        std::cout << "Error: Unknown math operation. Use 'mathutil help' for a list of commands.\n";
+        if (input.find("help") != 0) {
+            std::cout << "Error: Unknown math operation. Use 'mathutil help' for a list of commands.\n";
+        }
     }
 
     defaultOperation.hook(0);
