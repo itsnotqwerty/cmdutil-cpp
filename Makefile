@@ -16,3 +16,6 @@ $(TARGET): $(OBJS)
 
 clean:
 	rm -f $(SOURCE_DIR)/*.o
+
+install: $(TARGET)
+	sudo cp $(TARGET) /usr/local/bin/
