@@ -1,10 +1,5 @@
-#include <boost/multiprecision/cpp_int.hpp>
-#include <vector>
-#include <string>
 #include <iostream>
-#include "commands.hpp"
 #include "modules.hpp"
-#include "parsing.hpp"
 
 std::vector<boost::multiprecision::cpp_int> fib_cache = {0, 1};
 std::vector<boost::multiprecision::cpp_int> factorial_cache = {1, 1};
@@ -98,8 +93,8 @@ void mathutil(const std::string& input) {
     MathModuleType<boost::multiprecision::cpp_int> defaultOperation = {"help", 0, help};
 
     if (
-        handleCommands<boost::multiprecision::cpp_int, int>(input, bigNumberOperations, parseCommand<boost::multiprecision::cpp_int, int>) == 0 ||
-        handleCommands<std::vector<int>, int>(input, intArrayOperations, parseCommand<std::vector<int>, int>) == 0
+        registerModule<boost::multiprecision::cpp_int, int>(bigNumberOperations, input) == 0 ||
+        registerModule<std::vector<int>, int>(intArrayOperations, input) == 0
     ) {
         return;
     } else {

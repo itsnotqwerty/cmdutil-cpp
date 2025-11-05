@@ -4,7 +4,6 @@
 #include <random>
 #include "dice.hpp"
 #include "mathutils.hpp"
-#include "commands.hpp"
 #include "modules.hpp"
 
 void help(const std::string& input) {
