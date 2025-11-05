@@ -49,8 +49,12 @@ void mathutil(const std::string& input) {
 
     for (const auto& op : operations) {
         if (input.find(op.name) == 0) {
-            if (op.numArgs == 0) {
+            if (op.requiredArgs == 0) {
                 op.hook(0);
+                return;
+            }
+            if (input.length() <= op.name.length() + 1) {
+                std::cout << "Error: Not enough arguments for operation '" << op.name << "'\n";
                 return;
             }
             try {

@@ -16,7 +16,7 @@ void help(const std::string& input) {
 int main(int argc, char* argv[]) {
     std::vector<Command<void(*)(const std::string&)>> commands = {
         {"roll", 1, rollDice},
-        {"mathutil", 1, mathutil},
+        {"mathutil", 0, mathutil},
         {"help", 0, help}
     };
 
@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
 
         for (const auto& cmd : commands) {
             if (command == cmd.name) {
-                if (cmd.numArgs + 1 >= argc) {
+                if (cmd.requiredArgs + 1 >= argc) {
                     std::cout << "Error: Not enough arguments for command '" << cmd.name << "'\n";
                     return 1;
                 }
