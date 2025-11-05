@@ -5,6 +5,8 @@
 #include <string>
 #include <functional>
 
+enum CMD_STATES {CMD_SUCCESS, CMD_ERROR, CMD_MISSING_ARGS, CMD_NOT_FOUND};
+
 template<typename T>
 struct Command {
     std::string name;

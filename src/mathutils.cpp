@@ -93,16 +93,19 @@ void mathutil(const std::string& input) {
 
     ModuleType defaultOperation = {"help", 0, mathutil_help};
 
-    if (
-        registerModule<boost::multiprecision::cpp_int, int>(bigNumberOperations, input) == 0 ||
-        registerModule<std::vector<int>, int>(intArrayOperations, input) == 0
-    ) {
-        return;
-    } else {
+    std::vector<int> opCodes = {
+        registerModule<boost::multiprecision::cpp_int, int>(bigNumberOperations, input),
+        registerModule<std::vector<int>, int>(intArrayOperations, input)
+    };
+
+    if (std::all_of(opCodes.begin(), opCodes.end(), [](int n) {return n == CMD_NOT_FOUND;})) {
         if (input.find("help") != 0) {
             std::cout << "Error: Unknown math operation. Use 'mathutil help' for a list of commands.\n";
         }
+    } else {
+        return;
     }
 
     defaultOperation.hook("help");
+    return;
 }

@@ -15,22 +15,23 @@ int handleCommands(
         if (input.find(cmd.name) == 0) {
             if (cmd.name == "help") {
                 cmd.hook(0);
-                return 0;
+                return CMD_SUCCESS;
             }
             if (input.length() <= cmd.name.length() + 1) {
                 std::cout << "Error: Not enough arguments for operation '" << cmd.name << "'\n";
-                return -1;
+                return CMD_MISSING_ARGS;
             }
             const auto args = input.substr(cmd.name.length() + 1);
             try {
                 parse(std::stoi(args), cmd.hook(std::stoi(args)), cmd);
             } catch (const std::exception& e) {
                 std::cout << "Error: " << e.what() << "\n";
+                return CMD_ERROR;
             }
-            return 0;
+            return CMD_SUCCESS;
         }
     }
-    return -1;
+    return CMD_NOT_FOUND;
 }
 
 template int handleCommands<boost::multiprecision::cpp_int, int>(
