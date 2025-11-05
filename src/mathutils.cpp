@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include "modules.hpp"
 
 std::vector<boost::multiprecision::cpp_int> fib_cache = {0, 1};
@@ -69,14 +70,14 @@ std::vector<int> factor(int n) {
     return factors;
 }
 
-boost::multiprecision::cpp_int help(int n) {
+void mathutil_help(const std::string& input) {
     std::cout << "Math Utilities Available:\n";
     std::cout << "  fibonacci <n>: Compute the nth Fibonacci number\n";
     std::cout << "  factorial <n>: Compute the factorial of n\n";
     std::cout << "  prime <n>: Compute the nth prime number\n";
     std::cout << "  factorize <n>: Factorize the integer n into its prime factors\n";
     std::cout << "  help: Display this help message\n";
-    return 0;
+    return;
 }
 
 void mathutil(const std::string& input) {
@@ -90,7 +91,7 @@ void mathutil(const std::string& input) {
         {"factorize", 1, factor}
     };
 
-    MathModuleType<boost::multiprecision::cpp_int> defaultOperation = {"help", 0, help};
+    ModuleType defaultOperation = {"help", 0, mathutil_help};
 
     if (
         registerModule<boost::multiprecision::cpp_int, int>(bigNumberOperations, input) == 0 ||
@@ -103,5 +104,5 @@ void mathutil(const std::string& input) {
         }
     }
 
-    defaultOperation.hook(0);
+    defaultOperation.hook("help");
 }
