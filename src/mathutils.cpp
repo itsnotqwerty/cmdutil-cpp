@@ -9,6 +9,7 @@ std::vector<boost::multiprecision::cpp_int> fib_cache = {0, 1};
 std::vector<boost::multiprecision::cpp_int> factorial_cache = {1, 1};
 
 boost::multiprecision::cpp_int fib(int n) {
+    if (n > 100000) throw std::invalid_argument("Input too large for Fibonacci computation");
     if (n <= 0) return 0;
     if (n == 1) return 1;
     if (n < fib_cache.size()) {
@@ -22,6 +23,7 @@ boost::multiprecision::cpp_int fib(int n) {
 
 boost::multiprecision::cpp_int factorial(int n) {
     if (n < 0) throw std::invalid_argument("Negative input for factorial");
+    if (n > 10000) throw std::invalid_argument("Input too large for factorial computation");
     if (n < factorial_cache.size()) {
         return factorial_cache[n];
     }
@@ -34,6 +36,7 @@ boost::multiprecision::cpp_int factorial(int n) {
 boost::multiprecision::cpp_int prime(int n) {
     // Sieve of Eratosthenes to find the nth prime
     if (n < 1) throw std::invalid_argument("Input must be >= 1 for prime");
+    if (n > 100000000) throw std::invalid_argument("Input too large for prime computation");
     int limit = (n <= 5) ? 15 : n * (std::log(n) + std::log(std::log(n))); // Approximation for nth prime
     std::vector<bool> is_prime(limit + 1, true);
     is_prime[0] = is_prime[1] = false;
