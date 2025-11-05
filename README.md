@@ -8,6 +8,7 @@ You can see help for certain modules by using `./cmdutil <submodule> help`.
 
 
 ## Building
+Before building, make sure you have (Boost)[https://www.boost.org/] installed.
 ```
 git clone https://github.com/itsnotqwerty/cmdutil-cpp
 cd cmdutil-cpp
