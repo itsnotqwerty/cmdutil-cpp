@@ -70,12 +70,26 @@ std::vector<int> factorize(int n) {
     return factors;
 }
 
+int choose(int k, int n) {
+    int n_choose_k = (factorial(n) / (factorial(k) * factorial(n-k))).convert_to<int>();
+    return n_choose_k;
+}
+
+std::vector<int> pascal(int n) {
+    std::vector<int> bces;
+    for (int i = 0; i <= n; i++) {
+        bces.push_back(choose(i, n));
+    }
+    return bces;
+}
+
 void mathutil_help(const std::string& input) {
     std::cout << "Math Utilities Available:\n";
     std::cout << "  fibonacci <n>: Compute the nth Fibonacci number\n";
     std::cout << "  factorial <n>: Compute the factorial of n\n";
     std::cout << "  prime <n>: Compute the nth prime number\n";
     std::cout << "  factorize <n>: Factorize the integer n into its prime factors\n";
+    std::cout << "  pascal <n>: Compute the binomial coefficients of degree n\n";
     std::cout << "  help: Display this help message\n";
     return;
 }
@@ -88,7 +102,8 @@ void mathutil(const std::string& input) {
     };
 
     std::vector<MathModuleType<std::vector<int>>> intArrayOperations = {
-        {"factorize", SINGLE_ARG, factorize}
+        {"factorize", SINGLE_ARG, factorize},
+        {"pascal", SINGLE_ARG, pascal}
     };
 
     ModuleType defaultOperation = {"help", MODULE, mathutil_help};
