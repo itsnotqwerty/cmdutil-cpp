@@ -8,7 +8,7 @@
 std::vector<boost::multiprecision::cpp_int> fib_cache = {0, 1};
 std::vector<boost::multiprecision::cpp_int> factorial_cache = {1, 1};
 
-boost::multiprecision::cpp_int fib(int n) {
+boost::multiprecision::cpp_int fibonacci(int n) {
     if (n > 100000) throw std::invalid_argument("Input too large for Fibonacci computation");
     if (n <= 0) return 0;
     if (n == 1) return 1;
@@ -58,46 +58,68 @@ boost::multiprecision::cpp_int prime(int n) {
     throw std::runtime_error("Unreachable");
 }
 
+std::vector<int> factor(int n) {
+    if (n <= 0) throw std::invalid_argument("Input must be positive for factorization");
+    std::vector<int> factors;
+    for (int i = 2; i * i <= n; ++i) {
+        while (n % i == 0) {
+            factors.push_back(i);
+            n /= i;
+        }
+    }
+    if (n > 1) {
+        factors.push_back(n);
+    }
+    return factors;
+}
+
 boost::multiprecision::cpp_int help(int n) {
     std::cout << "Math Utilities Available:\n";
-    std::cout << "  fib <n>: Compute the nth Fibonacci number\n";
-    std::cout << "  fact <n>: Compute the factorial of n\n";
+    std::cout << "  fibonacci <n>: Compute the nth Fibonacci number\n";
+    std::cout << "  factorial <n>: Compute the factorial of n\n";
     std::cout << "  prime <n>: Compute the nth prime number\n";
+    std::cout << "  factorize <n>: Factorize the integer n into its prime factors\n";
     std::cout << "  help: Display this help message\n";
     return 0;
 }
 
+void parse_bignum_result(int number, boost::multiprecision::cpp_int result, const Command<boost::multiprecision::cpp_int(*)(int)>& op) {
+    std::string opName = op.name;
+    opName[0] = toupper(opName[0]);
+    std::cout << opName << "(" << number << ") = " << result << "\n";
+}
+
+void parse_intarray_result(int number, std::vector<int> result, const Command<std::vector<int>(*)(int)>& op) {
+    std::string opName = op.name;
+    opName[0] = toupper(opName[0]);
+    std::cout << opName << "(" << number << ") = [";
+    for (size_t i = 0; i < result.size(); ++i) {
+        std::cout << result[i];
+        if (i < result.size() - 1) std::cout << ", ";
+    }
+    std::cout << "]\n";
+}
+
 void mathutil(const std::string& input) {
-    std::vector<Command<boost::multiprecision::cpp_int(*)(int)>> operations = {
-        {"fib", 1, fib},
-        {"fact", 1, factorial},
-        {"prime", 1, prime},
-        {"help", 0, help}
+    std::vector<Command<boost::multiprecision::cpp_int(*)(int)>> bigNumberOperations = {
+        {"fibonacci", 1, fibonacci},
+        {"factorial", 1, factorial},
+        {"prime", 1, prime}
+    };
+
+    std::vector<Command<std::vector<int>(*)(int)>> intArrayOperations = {
+        {"factorize", 1, factor}
     };
 
     Command<boost::multiprecision::cpp_int(*)(int)> defaultOperation = {"help", 0, help};
 
-    for (const auto& op : operations) {
-        if (input.find(op.name) == 0) {
-            if (op.name == "help") {
-                op.hook(0);
-                return;
-            }
-            if (input.length() <= op.name.length() + 1) {
-                std::cout << "Error: Not enough arguments for operation '" << op.name << "'\n";
-                return;
-            }
-            try {
-                int number = std::stoi(input.substr(op.name.length() + 1));
-                boost::multiprecision::cpp_int result = op.hook(number);
-                std::string opName = op.name;
-                opName[0] = toupper(opName[0]);
-                std::cout << opName << "(" << number << ") = " << result << "\n";
-            } catch (const std::exception& e) {
-                std::cout << "Error: " << e.what() << "\n";
-            }
-            return;
-        }
+    if (
+        handleCommands<boost::multiprecision::cpp_int, int>(input, bigNumberOperations, parse_bignum_result) == 0 ||
+        handleCommands<std::vector<int>, int>(input, intArrayOperations, parse_intarray_result) == 0
+    ) {
+        return;
+    } else {
+        std::cout << "Error: Unknown math operation. Use 'mathutil help' for a list of commands.\n";
     }
 
     defaultOperation.hook(0);

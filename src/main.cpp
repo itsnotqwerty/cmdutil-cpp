@@ -9,7 +9,7 @@
 void help(const std::string& input) {
     std::cout << "Available commands:\n";
     std::cout << "  roll <dice>: Roll the specified dice (e.g., 2d6, 1d10-2d4)\n";
-    std::cout << "  mathutil <operation> <number>: Perform math operations (fib, fact, prime)\n";
+    std::cout << "  mathutil <operation> <number>: Perform math operations (e.g., prime, factorize)\n";
     std::cout << "  help: Show this help message\n";
 }
 

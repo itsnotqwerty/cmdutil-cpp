@@ -3,7 +3,7 @@ CXXFLAGS = -Wall -Wextra -std=c++17 -O2
 
 TARGET = cmdutil
 SOURCE_DIR = src
-SRCS = src/main.cpp src/dice.cpp src/mathutils.cpp
+SRCS = src/main.cpp src/dice.cpp src/mathutils.cpp src/commands.cpp
 OBJS = $(SRCS:.cpp=.o)
 
 all: $(TARGET)
