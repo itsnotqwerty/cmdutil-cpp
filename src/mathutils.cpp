@@ -2,8 +2,8 @@
 #include <vector>
 #include <string>
 #include <iostream>
-#include "mathutils.hpp"
 #include "commands.hpp"
+#include "parsing.hpp"
 
 std::vector<boost::multiprecision::cpp_int> fib_cache = {0, 1};
 std::vector<boost::multiprecision::cpp_int> factorial_cache = {1, 1};
@@ -83,23 +83,6 @@ boost::multiprecision::cpp_int help(int n) {
     return 0;
 }
 
-void parse_bignum_result(int number, boost::multiprecision::cpp_int result, const Command<boost::multiprecision::cpp_int(*)(int)>& op) {
-    std::string opName = op.name;
-    opName[0] = toupper(opName[0]);
-    std::cout << opName << "(" << number << ") = " << result << "\n";
-}
-
-void parse_intarray_result(int number, std::vector<int> result, const Command<std::vector<int>(*)(int)>& op) {
-    std::string opName = op.name;
-    opName[0] = toupper(opName[0]);
-    std::cout << opName << "(" << number << ") = [";
-    for (size_t i = 0; i < result.size(); ++i) {
-        std::cout << result[i];
-        if (i < result.size() - 1) std::cout << ", ";
-    }
-    std::cout << "]\n";
-}
-
 void mathutil(const std::string& input) {
     std::vector<Command<boost::multiprecision::cpp_int(*)(int)>> bigNumberOperations = {
         {"fibonacci", 1, fibonacci},
@@ -114,8 +97,8 @@ void mathutil(const std::string& input) {
     Command<boost::multiprecision::cpp_int(*)(int)> defaultOperation = {"help", 0, help};
 
     if (
-        handleCommands<boost::multiprecision::cpp_int, int>(input, bigNumberOperations, parse_bignum_result) == 0 ||
-        handleCommands<std::vector<int>, int>(input, intArrayOperations, parse_intarray_result) == 0
+        handleCommands<boost::multiprecision::cpp_int, int>(input, bigNumberOperations, parseCommand<boost::multiprecision::cpp_int, int>) == 0 ||
+        handleCommands<std::vector<int>, int>(input, intArrayOperations, parseCommand<std::vector<int>, int>) == 0
     ) {
         return;
     } else {
