@@ -31,10 +31,36 @@ boost::multiprecision::cpp_int factorial(int n) {
     return factorial_cache[n];
 }
 
+boost::multiprecision::cpp_int prime(int n) {
+    // Sieve of Eratosthenes to find the nth prime
+    if (n < 1) throw std::invalid_argument("Input must be >= 1 for prime");
+    int limit = (n <= 5) ? 15 : n * (std::log(n) + std::log(std::log(n))); // Approximation for nth prime
+    std::vector<bool> is_prime(limit + 1, true);
+    is_prime[0] = is_prime[1] = false;
+    for (int p = 2; p * p <= limit; ++p) {
+        if (is_prime[p]) {
+            for (int multiple = p * p; multiple <= limit; multiple += p) {
+                is_prime[multiple] = false;
+            }
+        }
+    }
+    // Count primes and find the nth prime
+    int count = 0;
+    for (int i = 2; i <= limit; ++i) {
+        if (is_prime[i]) {
+            count++;
+            if (count == n) return i;
+        }
+    }
+    throw std::runtime_error("Unreachable");
+}
+
 boost::multiprecision::cpp_int help(int n) {
     std::cout << "Math Utilities Available:\n";
     std::cout << "  fib <n>: Compute the nth Fibonacci number\n";
     std::cout << "  fact <n>: Compute the factorial of n\n";
+    std::cout << "  prime <n>: Compute the nth prime number\n";
+    std::cout << "  help: Display this help message\n";
     return 0;
 }
 
@@ -42,6 +68,7 @@ void mathutil(const std::string& input) {
     std::vector<Command<boost::multiprecision::cpp_int(*)(int)>> operations = {
         {"fib", 1, fib},
         {"fact", 1, factorial},
+        {"prime", 1, prime},
         {"help", 0, help}
     };
 
