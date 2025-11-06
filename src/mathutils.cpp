@@ -113,9 +113,9 @@ void mathutil_help(const std::string& input) {
     std::cout << "  fibonacci <n>: Compute the nth Fibonacci number\n";
     std::cout << "  factorial <n>: Compute the factorial of n\n";
     std::cout << "  prime <n>: Compute the nth prime number\n";
-    std::cout << "  factorize <n>: Factorize the integer n into its prime factors\n";
-    std::cout << "  pascal <n>: Compute the binomial coefficients of degree n\n";
-    std::cout << "  normalized_pascal <n>: Compute the binomial coefficients of degree n and normalize them\n";
+    std::cout << "  factorize <n> -[i <index>|r <start>,<end>]: Factorize the integer n into its prime factors\n";
+    std::cout << "  pascal <n> -[i <index>|r <start>,<end>]: Compute the binomial coefficients of degree n\n";
+    std::cout << "  normalized_pascal <n> -[i <index>|r <start>,<end>]: Compute the binomial coefficients of degree n and normalize them\n";
     std::cout << "  help: Display this help message\n";
     return;
 }
