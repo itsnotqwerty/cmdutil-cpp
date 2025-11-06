@@ -60,7 +60,7 @@ template<typename T, typename K>
 int handleCommands(
     const std::string& input,
     const std::vector<Command<T(*)(K)>>& commands,
-    const std::function<void(K, T, Command<T(*)(K)>)>& parse
+    const std::function<void(std::string, T, Command<T(*)(K)>)>& parse
 ) {
     for (const auto& cmd : commands) {
         if (input.find(cmd.name) == 0) {
@@ -82,7 +82,7 @@ int handleCommands(
 
             const auto args = input.substr(cmd.name.length() + 1);
             try {
-                parse(std::stoi(args), cmd.hook(std::stoi(args)), cmd);
+                parse(args, cmd.hook(std::stoi(args)), cmd);
             } catch (const std::exception& e) {
                 std::cout << "Error: " << e.what() << "\n";
                 return CMD_ERROR;
@@ -96,23 +96,23 @@ int handleCommands(
 template int handleCommands<boost::multiprecision::cpp_int, int>(
     const std::string& input,
     const std::vector<Command<boost::multiprecision::cpp_int(*)(int)>>& commands,
-    const std::function<void(int, boost::multiprecision::cpp_int, Command<boost::multiprecision::cpp_int(*)(int)>)>& parse
+    const std::function<void(std::string, boost::multiprecision::cpp_int, Command<boost::multiprecision::cpp_int(*)(int)>)>& parse
 );
 
 template int handleCommands<std::vector<boost::multiprecision::cpp_int>, int>(
     const std::string& input,
     const std::vector<Command<std::vector<boost::multiprecision::cpp_int>(*)(int)>>& commands,
-    const std::function<void(int, std::vector<boost::multiprecision::cpp_int>, Command<std::vector<boost::multiprecision::cpp_int>(*)(int)>)>& parse
+    const std::function<void(std::string, std::vector<boost::multiprecision::cpp_int>, Command<std::vector<boost::multiprecision::cpp_int>(*)(int)>)>& parse
 );
 
 template int handleCommands<std::vector<int>, int>(
     const std::string& input,
     const std::vector<Command<std::vector<int>(*)(int)>>& commands,
-    const std::function<void(int, std::vector<int>, Command<std::vector<int>(*)(int)>)>& parse
+    const std::function<void(std::string, std::vector<int>, Command<std::vector<int>(*)(int)>)>& parse
 );
 
 template int handleCommands<std::vector<double>, int>(
     const std::string& input,
     const std::vector<Command<std::vector<double>(*)(int)>>& commands,
-    const std::function<void(int, std::vector<double>, Command<std::vector<double>(*)(int)>)>& parse
+    const std::function<void(std::string, std::vector<double>, Command<std::vector<double>(*)(int)>)>& parse
 );

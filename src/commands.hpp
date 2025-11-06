@@ -14,6 +14,8 @@ struct Command {
     T hook;
 };
 
+int numArgs(const std::string& input, const std::string& cmdName);
+
 int handleCommands(
     const std::string& input,
     const std::vector<Command<void(*)(const std::string&)>>& commands
@@ -23,7 +25,7 @@ template<typename T, typename K>
 int handleCommands(
     const std::string& input,
     const std::vector<Command<T(*)(K)>>& commands,
-    const std::function<void(K, T, Command<T(*)(K)>)>& parse
+    const std::function<void(std::string, T, Command<T(*)(K)>)>& parse
 );
 
 #endif // COMMANDS_H

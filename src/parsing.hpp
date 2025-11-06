@@ -39,35 +39,32 @@ struct TypeIsDoubleVector<std::vector<double>> {
 };
 
 template<typename T>
-void parseSingleValue(T value);
+void parseSingleValue(T value, const std::string& args, const std::string& cmdName);
 
 template<typename T>
-void parseMultipleValues(std::vector<T> values);
+void parseMultipleValues(std::vector<T> values, const std::string& args, const std::string& cmdName);
 
 template<typename T, typename K>
-void parseCommand(K number, T result, const Command<T(*)(K)>& op) {
-    std::string opName = op.name;
-    opName[0] = toupper(opName[0]);
-    printf("%s(%d) = ", opName.c_str(), number);
+void parseCommand(std::string args, T result, const Command<T(*)(K)>& op) {
     if constexpr (std::is_same<T, boost::multiprecision::cpp_int>::value) {
-        parseSingleValue<boost::multiprecision::cpp_int>(result);
+        parseSingleValue<boost::multiprecision::cpp_int>(result, args, op.name);
         return;
     } else if constexpr (TypeIsBigNumVector<T>::value) {
-        parseMultipleValues<boost::multiprecision::cpp_int>(result);
+        parseMultipleValues<boost::multiprecision::cpp_int>(result, args, op.name);
         return;
     } else if constexpr (TypeIsIntVector<T>::value) {
-        parseMultipleValues<int>(result);
+        parseMultipleValues<int>(result, args, op.name);
         return;
     } else if constexpr (TypeIsDoubleVector<T>::value) {
-        parseMultipleValues<double>(result);
+        parseMultipleValues<double>(result, args, op.name);
         return;
     }
     return;
 }
 
-template void parseCommand<boost::multiprecision::cpp_int, int>(int number, boost::multiprecision::cpp_int result, const Command<boost::multiprecision::cpp_int(*)(int)>& op);
-template void parseCommand<std::vector<int>, int>(int number, std::vector<int> result, const Command<std::vector<int>(*)(int)>& op);
-template void parseCommand<std::vector<boost::multiprecision::cpp_int>, int>(int number, std::vector<boost::multiprecision::cpp_int> result, const Command<std::vector<boost::multiprecision::cpp_int>(*)(int)>& op);
-template void parseCommand<std::vector<double>, int>(int number, std::vector<double> result, const Command<std::vector<double>(*)(int)>& op);
+template void parseCommand<boost::multiprecision::cpp_int, int>(std::string args, boost::multiprecision::cpp_int result, const Command<boost::multiprecision::cpp_int(*)(int)>& op);
+template void parseCommand<std::vector<int>, int>(std::string args, std::vector<int> result, const Command<std::vector<int>(*)(int)>& op);
+template void parseCommand<std::vector<boost::multiprecision::cpp_int>, int>(std::string args, std::vector<boost::multiprecision::cpp_int> result, const Command<std::vector<boost::multiprecision::cpp_int>(*)(int)>& op);
+template void parseCommand<std::vector<double>, int>(std::string args, std::vector<double> result, const Command<std::vector<double>(*)(int)>& op);
 
 #endif // PARSING_H
