@@ -71,12 +71,14 @@ std::vector<int> factorize(int n) {
     return factors;
 }
 
-boost::multiprecision::cpp_int choose(int k, int n) {
+boost::multiprecision::cpp_int choose(int n, int k) {
+    if (k < 0 || n < 0 || k > n) throw std::invalid_argument("Invalid inputs for choose");
     boost::multiprecision::cpp_int n_choose_k = factorial(n) / (factorial(k) * factorial(n-k));
     return n_choose_k;
 }
 
 std::vector<double> normalize(const std::vector<boost::multiprecision::cpp_int>& values) {
+    if (values.empty()) throw std::invalid_argument("Empty vector for normalization");
     boost::multiprecision::cpp_int sum = 0;
     for (const auto& val : values) {
         sum += val;
@@ -89,14 +91,18 @@ std::vector<double> normalize(const std::vector<boost::multiprecision::cpp_int>&
 }
 
 std::vector<boost::multiprecision::cpp_int> pascal(int n) {
+    if (n < 0) throw std::invalid_argument("Negative input for pascal");
+    if (n > 10000) throw std::invalid_argument("Input too large for pascal computation");
     std::vector<boost::multiprecision::cpp_int> bces;
-    for (int i = 0; i <= n; i++) {
-        bces.push_back(choose(i, n));
+    for (int k = 0; k <= n; k++) {
+        bces.push_back(choose(n, k));
     }
     return bces;
 }
 
 std::vector<double> normalized_pascal(int n) {
+    if (n < 0) throw std::invalid_argument("Negative input for normalized_pascal");
+    if (n > 1000) throw std::invalid_argument("Input too large for normalized_pascal computation");
     std::vector<boost::multiprecision::cpp_int> bces = pascal(n);
     return normalize(bces);
 }
