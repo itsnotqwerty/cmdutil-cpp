@@ -14,6 +14,11 @@ struct Command {
     T hook;
 };
 
+int handleCommands(
+    const std::string& input,
+    const std::vector<Command<void(*)(const std::string&)>>& commands
+);
+
 template<typename T, typename K>
 int handleCommands(
     const std::string& input,

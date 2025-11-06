@@ -15,31 +15,29 @@ void help(const std::string& input) {
 int main(int argc, char* argv[]) {
     std::vector<ModuleType> commands = {
         {"roll", SINGLE_ARG, rollDice},
-        {"mathutil", MODULE, mathutil},
-        {"help", MODULE, help}
+        {"mathutil", MODULE, mathutil}
     };
 
     ModuleType defaultCommand = {"help", 0, help};
 
-    if (argc > 1) {
-        std::string command = argv[1];
-
-        for (const auto& cmd : commands) {
-            if (command == cmd.name) {
-                if (cmd.requiredArgs + 1 >= argc) {
-                    std::cout << "Error: Not enough arguments for command '" << cmd.name << "'\n";
-                    return 1;
-                }
-                std::string input;
-                for (int i = 2; i < argc; ++i) {
-                    input += argv[i];
-                    if (i < argc - 1) input += " ";
-                }
-                cmd.hook(input);
-                return 0;
-            }
-        }
+    std::string input;
+    for (int i = 1; i < argc; ++i) {
+        input += argv[i];
+        if (i < argc - 1) input += " ";
     }
+
+    std::vector<int> opCodes = {
+        registerModule(commands, input)
+    };
+
+    if (std::all_of(opCodes.begin(), opCodes.end(), [](int n) {return n == CMD_NOT_FOUND;})) {
+        if (input.find("help") != 0) {
+            std::cout << "Error: Unknown module. Use 'help' for a list of modules.\n";
+        }
+    } else {
+        return 0;
+    }
+
     defaultCommand.hook("help");
     return 0;
 }

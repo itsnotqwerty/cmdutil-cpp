@@ -5,6 +5,35 @@
 #include <boost/multiprecision/cpp_int.hpp>
 #include "commands.hpp"
 
+
+int handleCommands(
+    const std::string& input,
+    const std::vector<Command<void(*)(const std::string&)>>& commands
+) {
+    for (const auto& cmd : commands) {
+        if (input.find(cmd.name) == 0) {
+            if (input.length() <= cmd.name.length() + 1) {
+                try {
+                    cmd.hook("");
+                } catch (const std::exception& e) {
+                    std::cout << "Error: " << e.what() << "\n";
+                    return CMD_ERROR;
+                }
+                return CMD_SUCCESS;
+            }
+            const auto args = input.substr(cmd.name.length() + 1);
+            try {
+                cmd.hook(args);
+            } catch (const std::exception& e) {
+                std::cout << "Error: " << e.what() << "\n";
+                return CMD_ERROR;
+            }
+            return CMD_SUCCESS;
+        }
+    }
+    return CMD_NOT_FOUND;
+}
+
 template<typename T, typename K>
 int handleCommands(
     const std::string& input,

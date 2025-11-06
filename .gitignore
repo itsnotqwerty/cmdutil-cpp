@@ -1,5 +1,3 @@
 .vscode/
-pkg/
-
 src/*.o
 cmdutil
