@@ -109,7 +109,7 @@ void mathutil_help(const std::string& input) {
     std::cout << "  prime <n>: Compute the nth prime number\n";
     std::cout << "  factorize <n>: Factorize the integer n into its prime factors\n";
     std::cout << "  pascal <n>: Compute the binomial coefficients of degree n\n";
-    std::cout << "  normalize_pascal <n>: Compute the softmax of the binomial coefficients of degree n\n";
+    std::cout << "  normalized_pascal <n>: Compute the softmax of the binomial coefficients of degree n\n";
     std::cout << "  help: Display this help message\n";
     return;
 }
