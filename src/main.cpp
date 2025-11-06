@@ -4,10 +4,12 @@
 #include "modules.hpp"
 
 void help(const std::string& input) {
+    UNUSED(input);
     std::cout << "Available commands:\n";
     std::cout << "  roll <dice>: Roll the specified dice (e.g., 2d6, 1d10-2d4)\n";
     std::cout << "  mathutil <operation> <number>: Perform math operations (e.g., prime, factorize)\n";
     std::cout << "  help: Show this help message\n";
+    return;
 }
 
 int main(int argc, char* argv[]) {

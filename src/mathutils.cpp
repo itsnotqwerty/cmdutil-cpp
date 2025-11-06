@@ -9,7 +9,7 @@ boost::multiprecision::cpp_int fibonacci(int n) {
     if (n > 100000) throw std::invalid_argument("Input too large for Fibonacci computation");
     if (n <= 0) return 0;
     if (n == 1) return 1;
-    if (n < fib_cache.size()) {
+    if (n < static_cast<int>(fib_cache.size())) {
         return fib_cache[n];
     }
     for (int i = fib_cache.size(); i <= n; ++i) {
@@ -21,7 +21,7 @@ boost::multiprecision::cpp_int fibonacci(int n) {
 boost::multiprecision::cpp_int factorial(int n) {
     if (n < 0) throw std::invalid_argument("Negative input for factorial");
     if (n > 10000) throw std::invalid_argument("Input too large for factorial computation");
-    if (n < factorial_cache.size()) {
+    if (n < static_cast<int>(factorial_cache.size())) {
         return factorial_cache[n];
     }
     for (int i = factorial_cache.size(); i <= n; ++i) {
@@ -84,6 +84,7 @@ std::vector<boost::multiprecision::cpp_int> pascal(int n) {
 }
 
 void mathutil_help(const std::string& input) {
+    UNUSED(input);
     std::cout << "Math Utilities Available:\n";
     std::cout << "  fibonacci <n>: Compute the nth Fibonacci number\n";
     std::cout << "  factorial <n>: Compute the factorial of n\n";
@@ -108,7 +109,6 @@ void mathutil(const std::string& input) {
     std::vector<MathModuleType<std::vector<int>>> intArrayOperations = {
         {"factorize", SINGLE_ARG, factorize}
     };
-
 
     ModuleType defaultOperation = {"help", MODULE, mathutil_help};
 
