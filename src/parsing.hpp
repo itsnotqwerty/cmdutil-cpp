@@ -28,6 +28,16 @@ struct TypeIsIntVector<std::vector<int>> {
     static const bool value = true;
 };
 
+template<class T>
+struct TypeIsDoubleVector {
+    static const bool value = false;
+};
+
+template<>
+struct TypeIsDoubleVector<std::vector<double>> {
+    static const bool value = true;
+};
+
 template<typename T>
 void parseSingleValue(T value) {
     std::cout << value << "\n";
@@ -61,11 +71,16 @@ void parseCommand(K number, T result, const Command<T(*)(K)>& op) {
     } else if constexpr (TypeIsIntVector<T>::value) {
         parseMultipleValues<int>(result);
         return;
+    } else if constexpr (TypeIsDoubleVector<T>::value) {
+        parseMultipleValues<double>(result);
+        return;
     }
     return;
 }
 
 template void parseCommand<boost::multiprecision::cpp_int, int>(int number, boost::multiprecision::cpp_int result, const Command<boost::multiprecision::cpp_int(*)(int)>& op);
 template void parseCommand<std::vector<int>, int>(int number, std::vector<int> result, const Command<std::vector<int>(*)(int)>& op);
+template void parseCommand<std::vector<boost::multiprecision::cpp_int>, int>(int number, std::vector<boost::multiprecision::cpp_int> result, const Command<std::vector<boost::multiprecision::cpp_int>(*)(int)>& op);
+template void parseCommand<std::vector<double>, int>(int number, std::vector<double> result, const Command<std::vector<double>(*)(int)>& op);
 
 #endif // PARSING_H

@@ -75,12 +75,39 @@ boost::multiprecision::cpp_int choose(int k, int n) {
     return n_choose_k;
 }
 
+std::vector<double> softmax(const std::vector<boost::multiprecision::cpp_int>& values) {
+    std::vector<double> exp_values;
+    boost::multiprecision::cpp_int max = *std::max_element(values.begin(), values.end());
+    double sum_exp = 0.0;
+    for (const auto& val : values) {
+        double exp_val = std::exp(static_cast<double>(val - max));
+        exp_values.push_back(exp_val);
+        sum_exp += exp_val;
+    }
+    if (sum_exp == 0.0) {
+        for (size_t i = 0; i < exp_values.size(); ++i) {
+            exp_values[i] = 1.0 / exp_values.size();
+        }
+        return exp_values;
+    } else {
+        for (double &exp_val : exp_values) {
+            exp_val /= sum_exp;
+        }
+    }
+    return exp_values;
+}
+
 std::vector<boost::multiprecision::cpp_int> pascal(int n) {
     std::vector<boost::multiprecision::cpp_int> bces;
     for (int i = 0; i <= n; i++) {
         bces.push_back(choose(i, n));
     }
     return bces;
+}
+
+std::vector<double> softmax_pascal(int n) {
+    std::vector<boost::multiprecision::cpp_int> bces = pascal(n);
+    return softmax(bces);
 }
 
 void mathutil_help(const std::string& input) {
@@ -91,6 +118,7 @@ void mathutil_help(const std::string& input) {
     std::cout << "  prime <n>: Compute the nth prime number\n";
     std::cout << "  factorize <n>: Factorize the integer n into its prime factors\n";
     std::cout << "  pascal <n>: Compute the binomial coefficients of degree n\n";
+    std::cout << "  softmax_pascal <n>: Compute the softmax of the binomial coefficients of degree n\n";
     std::cout << "  help: Display this help message\n";
     return;
 }
@@ -110,12 +138,17 @@ void mathutil(const std::string& input) {
         {"factorize", SINGLE_ARG, factorize}
     };
 
+    std::vector<MathModuleType<std::vector<double>>> doubleArrayOperations = {
+        {"softmax_pascal", SINGLE_ARG, softmax_pascal}
+    };
+
     ModuleType defaultOperation = {"help", MODULE, mathutil_help};
 
     std::vector<int> opCodes = {
-        registerModule<boost::multiprecision::cpp_int, int>(bigNumberOperations, input),
-        registerModule<std::vector<boost::multiprecision::cpp_int>, int>(bigNumberArrayOperations, input),
-        registerModule<std::vector<int>, int>(intArrayOperations, input)
+        registerMathModule<boost::multiprecision::cpp_int, int>(bigNumberOperations, input),
+        registerMathModule<std::vector<boost::multiprecision::cpp_int>, int>(bigNumberArrayOperations, input),
+        registerMathModule<std::vector<int>, int>(intArrayOperations, input),
+        registerMathModule<std::vector<double>, int>(doubleArrayOperations, input)
     };
 
     if (std::all_of(opCodes.begin(), opCodes.end(), [](int n) {return n == CMD_NOT_FOUND;})) {

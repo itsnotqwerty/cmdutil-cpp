@@ -76,3 +76,9 @@ template int handleCommands<std::vector<int>, int>(
     const std::vector<Command<std::vector<int>(*)(int)>>& commands,
     const std::function<void(int, std::vector<int>, Command<std::vector<int>(*)(int)>)>& parse
 );
+
+template int handleCommands<std::vector<double>, int>(
+    const std::string& input,
+    const std::vector<Command<std::vector<double>(*)(int)>>& commands,
+    const std::function<void(int, std::vector<double>, Command<std::vector<double>(*)(int)>)>& parse
+);
