@@ -6,26 +6,43 @@
 #include "commands.hpp"
 
 
+int numArgs(const std::string& input, const std::string& cmdName) {
+    if (input.length() <= cmdName.length() + 1) {
+        return 0;
+    }
+    std::string args = input.substr(cmdName.length() + 1);
+    int count = 1;
+    for (char c : args) {
+        if (c == ' ') {
+            count++;
+        }
+    }
+    return count;
+}
+
+
 int handleCommands(
     const std::string& input,
     const std::vector<Command<void(*)(const std::string&)>>& commands
 ) {
     for (const auto& cmd : commands) {
         if (input.find(cmd.name) == 0) {
-            if (input.length() <= cmd.name.length() + 1) {
-                if (cmd.requiredArgs > 0) {
-                    std::cout << "Error: Not enough arguments for operation '" << cmd.name << "'\n";
-                    return CMD_MISSING_ARGS;
-                } else {
-                    try {
-                        cmd.hook("");
-                    } catch (const std::exception& e) {
-                        std::cout << "Error: " << e.what() << "\n";
-                        return CMD_ERROR;
-                    }
+            const int argc = numArgs(input, cmd.name);
+            if (cmd.requiredArgs > 0 && cmd.requiredArgs > argc) {
+                std::cout << "Error: Not enough arguments for operation '" << cmd.name << "'\n";
+                return CMD_MISSING_ARGS;
+            }
+
+            if (cmd.requiredArgs == 0 && argc == 0) {
+                try {
+                    cmd.hook("");
+                } catch (const std::exception& e) {
+                    std::cout << "Error: " << e.what() << "\n";
+                    return CMD_ERROR;
                 }
                 return CMD_SUCCESS;
             }
+
             const auto args = input.substr(cmd.name.length() + 1);
             try {
                 cmd.hook(args);
@@ -47,20 +64,22 @@ int handleCommands(
 ) {
     for (const auto& cmd : commands) {
         if (input.find(cmd.name) == 0) {
-            if (input.length() <= cmd.name.length() + 1) {
-                if (cmd.requiredArgs > 0) {
-                    std::cout << "Error: Not enough arguments for operation '" << cmd.name << "'\n";
-                    return CMD_MISSING_ARGS;
-                } else {
-                    try {
-                        cmd.hook(1);
-                    } catch (const std::exception& e) {
-                        std::cout << "Error: " << e.what() << "\n";
-                        return CMD_ERROR;
-                    }
+            const int argc = numArgs(input, cmd.name);
+            if (cmd.requiredArgs > 0 && cmd.requiredArgs > argc) {
+                std::cout << "Error: Not enough arguments for operation '" << cmd.name << "'\n";
+                return CMD_MISSING_ARGS;
+            }
+
+            if (cmd.requiredArgs == 0 && argc == 0) {
+                try {
+                    cmd.hook(1);
+                } catch (const std::exception& e) {
+                    std::cout << "Error: " << e.what() << "\n";
+                    return CMD_ERROR;
                 }
                 return CMD_SUCCESS;
             }
+
             const auto args = input.substr(cmd.name.length() + 1);
             try {
                 parse(std::stoi(args), cmd.hook(std::stoi(args)), cmd);
