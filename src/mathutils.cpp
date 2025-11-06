@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <boost/fusion/include/accumulate.hpp>
 #include "modules.hpp"
 
 std::vector<boost::multiprecision::cpp_int> fib_cache = {0, 1};
@@ -75,26 +76,16 @@ boost::multiprecision::cpp_int choose(int k, int n) {
     return n_choose_k;
 }
 
-std::vector<double> softmax(const std::vector<boost::multiprecision::cpp_int>& values) {
-    std::vector<double> exp_values;
-    boost::multiprecision::cpp_int max = *std::max_element(values.begin(), values.end());
-    double sum_exp = 0.0;
+std::vector<double> normalize(const std::vector<boost::multiprecision::cpp_int>& values) {
+    boost::multiprecision::cpp_int sum = 0;
     for (const auto& val : values) {
-        double exp_val = std::exp(static_cast<double>(val - max));
-        exp_values.push_back(exp_val);
-        sum_exp += exp_val;
+        sum += val;
     }
-    if (sum_exp == 0.0) {
-        for (size_t i = 0; i < exp_values.size(); ++i) {
-            exp_values[i] = 1.0 / exp_values.size();
-        }
-        return exp_values;
-    } else {
-        for (double &exp_val : exp_values) {
-            exp_val /= sum_exp;
-        }
+    std::vector<double> normalized;
+    for (const auto& val : values) {
+        normalized.push_back(static_cast<double>(val) / static_cast<double>(sum));
     }
-    return exp_values;
+    return normalized;
 }
 
 std::vector<boost::multiprecision::cpp_int> pascal(int n) {
@@ -105,9 +96,9 @@ std::vector<boost::multiprecision::cpp_int> pascal(int n) {
     return bces;
 }
 
-std::vector<double> softmax_pascal(int n) {
+std::vector<double> normalized_pascal(int n) {
     std::vector<boost::multiprecision::cpp_int> bces = pascal(n);
-    return softmax(bces);
+    return normalize(bces);
 }
 
 void mathutil_help(const std::string& input) {
@@ -118,7 +109,7 @@ void mathutil_help(const std::string& input) {
     std::cout << "  prime <n>: Compute the nth prime number\n";
     std::cout << "  factorize <n>: Factorize the integer n into its prime factors\n";
     std::cout << "  pascal <n>: Compute the binomial coefficients of degree n\n";
-    std::cout << "  softmax_pascal <n>: Compute the softmax of the binomial coefficients of degree n\n";
+    std::cout << "  normalize_pascal <n>: Compute the softmax of the binomial coefficients of degree n\n";
     std::cout << "  help: Display this help message\n";
     return;
 }
@@ -139,7 +130,7 @@ void mathutil(const std::string& input) {
     };
 
     std::vector<MathModuleType<std::vector<double>>> doubleArrayOperations = {
-        {"softmax_pascal", SINGLE_ARG, softmax_pascal}
+        {"normalized_pascal", SINGLE_ARG, normalized_pascal}
     };
 
     ModuleType defaultOperation = {"help", MODULE, mathutil_help};
