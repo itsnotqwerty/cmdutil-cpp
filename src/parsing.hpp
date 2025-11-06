@@ -39,23 +39,10 @@ struct TypeIsDoubleVector<std::vector<double>> {
 };
 
 template<typename T>
-void parseSingleValue(T value) {
-    std::cout << value << "\n";
-    return;
-}
+void parseSingleValue(T value);
 
 template<typename T>
-void parseMultipleValues(std::vector<T> values) {
-    std::cout << "[";
-    for (size_t i = 0; i < values.size(); ++i) {
-        std::cout << values[i];
-        if (i < values.size() - 1) {
-            std::cout << ", ";
-        }
-    }
-    std::cout << "]\n";
-    return;
-}
+void parseMultipleValues(std::vector<T> values);
 
 template<typename T, typename K>
 void parseCommand(K number, T result, const Command<T(*)(K)>& op) {
